@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 import path from "path";
 import { defineConfig } from "vite";
-import retryPlugin from "./src";
+import retryPlugin from "./src/plugin";
 
 export default defineConfig({
   base: "./",

@@ -10,7 +10,6 @@
     "module": "esnext",
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "bundler",
-    "ignoreDeprecations": "6.0",
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
@@ -20,7 +19,9 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client", "node"]
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "types": ["vite/client", "node", "vitest/globals"]
   },
   "include": ["src", "demo"],
   "exclude": ["**/*.test.ts", "node_modules", "test/**", ".history/**"]

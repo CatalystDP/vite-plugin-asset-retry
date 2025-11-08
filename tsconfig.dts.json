@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "rootDir": "./src",
+    "baseUrl": "./src/plugin",
+    "outDir": "./dist/plugin"
+  },
+  "include": ["src/plugin"]
+}

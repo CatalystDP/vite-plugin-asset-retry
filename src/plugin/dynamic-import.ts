@@ -1,11 +1,13 @@
 import { PluginOption } from "vite";
 import * as path from "path";
+import { DYNAMIC_IMPORT_FN_NAME } from "../shared/constants";
 
 export const createDynamicImportPlugin = (): PluginOption => {
   return {
-    name: "retry-dynamic-import",
+    name: "vite-plugin-assets-retry:retry-dynamic-import",
+    apply: "build",
     renderDynamicImport(options) {
-      const { moduleId, targetModuleId, chunk, targetChunk } = options;
+      const { targetModuleId, chunk, targetChunk } = options;
       if (!targetModuleId || !targetChunk) {
         return;
       }
@@ -16,8 +18,8 @@ export const createDynamicImportPlugin = (): PluginOption => {
         relavtivePath = `./${relavtivePath}`;
       }
       return {
-        left: `__dynamicRetry(import(`,
-        right: `), {importerUri: import.meta.url, targetRelativePath: ${JSON.stringify(
+        left: `${DYNAMIC_IMPORT_FN_NAME}(import(`,
+        right: `), {importerUri: import.meta.url, retryPath: ${JSON.stringify(
           relavtivePath
         )}})`,
       };

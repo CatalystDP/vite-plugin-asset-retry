@@ -1,22 +1,16 @@
 import path from "path";
 import { defineConfig } from "vite";
-import packageJson from "./package.json";
+import { builtinModules } from "node:module";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import dts from "unplugin-dts/vite";
 
-const getPackageName = () => {
-  return packageJson.name;
-};
-
-const getPackageNameCamelCase = () => {
-  try {
-    return getPackageName().replace(/-./g, char => char[1].toUpperCase());
-  } catch {
-    throw new Error("Name property in package.json is missing.");
-  }
-};
+const NODE_BUILT_IN_MODULES = builtinModules.filter(m => !m.startsWith("_"));
+NODE_BUILT_IN_MODULES.push(...NODE_BUILT_IN_MODULES.map(m => `node:${m}`));
 
 const fileName = {
-  es: `${getPackageName()}.js`,
-  iife: `${getPackageName()}.iife.js`,
+  es: `index.mjs`,
+  cjs: `index.cjs`,
 };
 
 const formats = Object.keys(fileName) as Array<keyof typeof fileName>;
@@ -25,18 +19,35 @@ export default defineConfig({
   base: "./",
   build: {
     emptyOutDir: true,
-    outDir: "./lib",
+    outDir: "./dist/plugin",
     lib: {
-      entry: path.resolve(__dirname, "src/index.ts"),
-      name: getPackageNameCamelCase(),
+      entry: path.resolve(__dirname, "src/plugin/index.ts"),
+      name: "index",
       formats,
       fileName: format => fileName[format],
     },
+    minify: false,
+    rollupOptions: {
+      external: NODE_BUILT_IN_MODULES,
+    },
+  },
+  plugins: [
+    dts({
+      tsconfigPath: path.join(__dirname, "./tsconfig.dts.json"),
+      outDir: "dist/plugin",
+      beforeWriteFile: (filePath: string) => {
+        if (filePath.includes("/plugin/plugin")) {
+          return {
+            filePath: filePath.replace("/plugin/plugin", "/plugin"),
+          };
+        }
+      },
+    }),
+  ],
+  optimizeDeps: {
+    exclude: NODE_BUILT_IN_MODULES,
   },
 
-  test: {
-    watch: false,
-  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),

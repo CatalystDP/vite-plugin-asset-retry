@@ -1,24 +1,29 @@
 {
-  "name": "vite-vanilla-ts-lib-starter",
-  "private": true,
-  "version": "0.0.6",
-  "module": "./dist/vite-vanilla-ts-lib-starter.js",
-  "type": "module",
+  "name": "@catalystdp/vite-plugin-assets-retry",
+  "version": "0.1.0",
   "exports": {
     ".": {
-      "import": "./dist/vite-vanilla-ts-lib-starter.js"
+      "import": "./dist/plugin/index.mjs",
+      "require": "./dist/plugin/index.cjs"
     },
-    "./dist/": {
-      "import": "./dist/"
+    "./plugin": {
+      "import": "./dist/plugin/index.mjs",
+      "require": "./dist/plugin/index.cjs"
+    },
+    "./runtime": {
+      "default": "./dist/runtime/retry-runtime.umd.js"
     }
   },
-  "types": "./dist/index.d.ts",
+  "types": "./dist/plugin/index.d.ts",
   "scripts": {
     "bootstrap": "pnpm install --frozen-lockfile",
     "dev": "vite --host",
-    "build:demo": "vite build",
-    "build:lib": "vite build --config vitge.config.lib.ts",
+    "build:demo": "npm run dev:runtime && vite build",
+    "build:plugin": "vite build --config vite.config.plugin.ts",
+    "dev:runtime": "npm run build:runtime -- --minify false",
+    "build:runtime": "vite build --config vite.config.runtime.ts",
     "build": "rimraf build/**/* && tsc && vite build --config vite.config.lib.ts && dts-bundle-generator --config ./dts-bundle-generator.config.ts && copyfiles ./package.json build",
+    "build:all": "rimraf ./dist && npm run build:runtime && npm run build:plugin",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "lint:scripts": "eslint . --ext .ts",
@@ -27,13 +32,17 @@
     "format:styles": "stylelint ./**/*.{css,scss} --fix",
     "format": "npm run format:scripts && npm run format:styles",
     "prepare": "husky && echo 'npx lint-staged' > .husky/pre-commit && git add .husky/pre-commit",
-    "uninstall-husky": "npm uninstall husky --no-save && git config --unset core.hooksPath && npx rimraf .husky"
+    "uninstall-husky": "npm uninstall husky --no-save && git config --unset core.hooksPath && npx rimraf .husky",
+    "test:e2e": "npm run build:demo && playwright test"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@microsoft/api-extractor": "^7.54.0",
+    "@playwright/test": "^1.55.1",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^24.0.10",
     "@vitest/coverage-v8": "^3.2.4",
+    "assets-retry": "^0.3.5",
     "copyfiles": "^2.4.1",
     "dts-bundle-generator": "^9.5.1",
     "eslint": "^9.30.1",
@@ -42,6 +51,7 @@
     "globals": "^16.4.0",
     "husky": "^9.1.7",
     "jiti": "^2.4.2",
+    "jsdom": "^27.1.0",
     "lint-staged": "^16.1.2",
     "postcss": "^8.5.6",
     "postcss-scss": "^4.0.9",
@@ -52,11 +62,16 @@
     "stylelint-config-sass-guidelines": "^12.1.0",
     "stylelint-order": "^7.0.0",
     "stylelint-prettier": "^5.0.3",
+    "terser": "^5.44.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.36.0",
+    "unplugin-dts": "1.0.0-beta.0",
     "vite": "^7.0.3",
     "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=20.18.0"
   },
   "packageManager": "pnpm@10.17.1+sha256.a1e0133f6801c13039ae41309e5e5a7d1058a3a1e1edd020a4944a83c5368d04"
 }
