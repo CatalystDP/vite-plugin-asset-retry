@@ -37,7 +37,8 @@
     "prepare": "husky && echo 'npx lint-staged' > .husky/pre-commit && git add .husky/pre-commit",
     "uninstall-husky": "npm uninstall husky --no-save && git config --unset core.hooksPath && npx rimraf .husky",
     "test:e2e": "npm run build:demo && playwright test",
-    "commit": "cz"
+    "commit": "cz",
+    "release": "release-it"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
@@ -64,6 +65,7 @@
     "postcss": "^8.5.6",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.6.2",
+    "release-it": "^19.0.6",
     "rimraf": "^6.0.1",
     "stylelint": "^16.21.1",
     "stylelint-config-recommended": "^16.0.0",
