@@ -33,9 +33,12 @@
     "format": "npm run format:scripts && npm run format:styles",
     "prepare": "husky && echo 'npx lint-staged' > .husky/pre-commit && git add .husky/pre-commit",
     "uninstall-husky": "npm uninstall husky --no-save && git config --unset core.hooksPath && npx rimraf .husky",
-    "test:e2e": "npm run build:demo && playwright test"
+    "test:e2e": "npm run build:demo && playwright test",
+    "commit": "cz"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.36.0",
     "@microsoft/api-extractor": "^7.54.0",
     "@playwright/test": "^1.55.1",
@@ -43,7 +46,9 @@
     "@types/node": "^24.0.10",
     "@vitest/coverage-v8": "^3.2.4",
     "assets-retry": "^0.3.5",
+    "commitizen": "^4.3.1",
     "copyfiles": "^2.4.1",
+    "cz-conventional-changelog": "^3.3.0",
     "dts-bundle-generator": "^9.5.1",
     "eslint": "^9.30.1",
     "eslint-config-prettier": "^10.1.5",
@@ -73,5 +78,15 @@
   "engines": {
     "node": ">=20.18.0"
   },
-  "packageManager": "pnpm@10.17.1+sha256.a1e0133f6801c13039ae41309e5e5a7d1058a3a1e1edd020a4944a83c5368d04"
+  "packageManager": "pnpm@10.17.1+sha256.a1e0133f6801c13039ae41309e5e5a7d1058a3a1e1edd020a4944a83c5368d04",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && npx cz --hook || true"
+    }
+  }
 }
