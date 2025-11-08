@@ -24,7 +24,7 @@ jobs:
       - run: pnpm build:all
 
   publish-npm:
-    if: github.ref == 'main'
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +38,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   # publish to beta version
   publish-npm-beta:
-    if: github.ref == 'beta'
+    if: github.ref == 'refs/heads/beta'
     needs: build
     runs-on: ubuntu-latest
     steps:
