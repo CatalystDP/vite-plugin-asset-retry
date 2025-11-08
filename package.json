@@ -1,6 +1,6 @@
 {
   "name": "@catalystdp/vite-plugin-assets-retry",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "exports": {
     ".": {
       "import": "./dist/plugin/index.mjs",
@@ -102,7 +102,11 @@
       "push": true
     },
     "npm": {
-      "publish": false
+      "publish": true,
+      "publishArgs": [
+        "--access",
+        "public"
+      ]
     },
     "plugins": {
       "@release-it/conventional-changelog": {
