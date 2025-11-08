@@ -1,3 +1,12 @@
+# Changelog
+
+# 0.2.0-rc.0 (2025-11-08)
+
+
+### Features
+
+* 支持动态import导入 ([2868ce4](https://github.com/CatalystDP/vite-plugin-asset-retry/commit/2868ce4ad0dffad079017712baff3a2ea502d0e4))
+
 # Change Log
 
 All notable changes to the "vite-vanilla-ts-lib-starter" project will be documented in this file.
