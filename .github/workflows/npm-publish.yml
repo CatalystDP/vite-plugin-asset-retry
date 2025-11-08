@@ -29,8 +29,8 @@ jobs:
       - run: pnpm build:all
       - name: config git userinfo
         run: |
-          git config --global user.email "cld18874@gmail.com"
-          git config --global user.name "CatalystDP"
+            git config --global user.name "GitHub Actions"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
       - name: publish-beta
         if: github.ref == 'refs/heads/beta'
         run: npx release-it minor --preRelease=beta --npm.publish=false --ci
