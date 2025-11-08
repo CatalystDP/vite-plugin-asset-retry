@@ -12,6 +12,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: prepare pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm --activate
+          pnpm bootstrap
       - run: npm build:all
 
   publish-npm:
