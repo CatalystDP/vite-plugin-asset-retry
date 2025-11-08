@@ -17,7 +17,7 @@ jobs:
           corepack enable
           corepack prepare pnpm --activate
           pnpm bootstrap
-      - run: npm build:all
+      - run: pnpm build:all
 
   publish-npm:
     if: github.ref == 'main'
