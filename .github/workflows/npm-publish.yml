@@ -28,7 +28,7 @@ jobs:
       - run: pnpm build:all
       - name: publish-beta
         if: github.ref == 'refs/heads/beta'
-        run: npx release-it --preRelease=beta --dry-run --ci
+        run: npx release-it minor --preRelease=beta --dry-run --ci
       - name: publish-latest
         if: github.ref == 'refs/heads/main'
         run: echo "fake publish"
