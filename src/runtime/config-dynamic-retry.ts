@@ -1,4 +1,4 @@
-import { withPromiseResolver } from "@/shared/promise-resolver";
+import { withPromiseResolver } from "../shared/promise-resolver";
 import { DYNAMIC_IMPORT_FN_NAME } from "./../shared/constants";
 import { RetryOptions } from "./options";
 
@@ -15,17 +15,25 @@ const startRetry = async (context: IRetryDynamicImportContext) => {
   const { importerUri, retryPath } = context;
   const retryUrl = new URL(retryPath, importerUri);
   const originUrl = retryUrl.toString();
+  const retryDomainList = domain.length === 0 ? [retryUrl.host] : domain;
+  if (!retryDomainList.includes(retryUrl.host)) {
+    throw new Error(`domain ${retryUrl.host} not in domain list cannot retry`);
+  }
   console.debug("start retry with options: ", RetryOptions);
   console.debug(`start retry for origin url: ${originUrl}`);
   let retryCount = 0;
-  const retryDomainList = domain.length === 0 ? [retryUrl.hostname] : domain;
+
   let retryDomainIdx = 0;
 
   let lastRetryUrl = originUrl;
   while (retryCount < maxRetryCount) {
     const currentDomain = retryDomainList[retryDomainIdx];
     const newRetryUrl = new URL(lastRetryUrl);
-    newRetryUrl.hostname = currentDomain;
+    newRetryUrl.host = currentDomain;
+
+    if (currentDomain.indexOf(":") === -1) {
+      newRetryUrl.port = "";
+    }
 
     newRetryUrl.searchParams.set("t", `${new Date().getTime()}`);
     newRetryUrl.searchParams.set("r", `${retryCount}`);
@@ -41,14 +49,21 @@ const startRetry = async (context: IRetryDynamicImportContext) => {
     }
     console.debug(`retry for url with new url: ${newRetryUrlStr}`);
     try {
-      return await import(newRetryUrlStr);
-    } catch (err) {
+      const result = await import(newRetryUrlStr);
+      RetryOptions?.onSuccess?.("import", {
+        currentUrl: newRetryUrlStr,
+      });
+      return result;
+    } catch {
       // continue
     }
     lastRetryUrl = newRetryUrlStr;
     retryCount++;
     retryDomainIdx = (retryDomainIdx + 1) % retryDomainList.length;
   }
+  RetryOptions?.onFail?.("import", {
+    currentUrl: lastRetryUrl,
+  });
   throw new Error(`maximum retry count reached for url: ${originUrl}`);
 };
 

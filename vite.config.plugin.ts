@@ -24,6 +24,8 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/plugin/index.ts"),
       name: "index",
       formats,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       fileName: format => fileName[format],
     },
     minify: false,
@@ -33,7 +35,7 @@ export default defineConfig({
   },
   plugins: [
     dts({
-      tsconfigPath: path.join(__dirname, "./tsconfig.dts.json"),
+      tsconfigPath: path.join(__dirname, "./tsconfig.dts-plugin.json"),
       outDir: "dist/plugin",
       beforeWriteFile: (filePath: string) => {
         if (filePath.includes("/plugin/plugin")) {

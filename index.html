@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
     <script>
-      window._demoRetryDomainList = [];
+      window._demoRetryDomainList = [location.host, "a.com", "b.com"];
       window.$$configAssetsRetry({
-        domain: __demoRetryDomainList,
+        domain: _demoRetryDomainList,
       });
     </script>
   </head>

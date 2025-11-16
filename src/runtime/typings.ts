@@ -45,4 +45,6 @@ export interface IConfigRetryOptions {
    * final load fail url
    */
   onFail?: (type: IJSLoadType, context: OnFailCallbackContext) => void;
+
+  log?: (level: "error" | "info" | "debug", ...msgs: unknown[]) => void;
 }

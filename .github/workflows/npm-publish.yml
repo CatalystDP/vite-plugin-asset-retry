@@ -6,9 +6,6 @@ name: Publish Package
 on:
   workflow_dispatch:
   push:
-    branches:
-      - beta
-      - main
 env:
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,13 +27,15 @@ jobs:
           corepack prepare pnpm --activate
           pnpm bootstrap
       - run: pnpm build:all
+      - name: run test
+        run: pnpm test:all
       - name: config git userinfo
         run: |
             git config --global user.name "GitHub Actions"
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
       - name: publish-beta
         if: github.ref == 'refs/heads/beta'
-        run: npx release-it minor --preRelease=beta --npm.publish=false --ci
+        run: npx release-it minor --preRelease=beta --ci
       - name: publish-latest
         if: github.ref == 'refs/heads/main'
-        run: echo "fake publish"
+        run: npx release-it minor --ci

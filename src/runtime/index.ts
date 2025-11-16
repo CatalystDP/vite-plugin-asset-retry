@@ -1,14 +1,17 @@
 import { RetryOptions } from "./options";
 import { IConfigRetryOptions } from "./typings";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import "assets-retry/dist/assets-retry.umd.js";
+import { retryDynamicImport } from "./config-dynamic-retry";
 
-const configRetry = (options?: IConfigRetryOptions) => {
+interface IConfigRetry {
+  (options?: IConfigRetryOptions): void;
+  retryDynamicImport: typeof retryDynamicImport;
+}
+
+const configRetry: IConfigRetry = (options?: IConfigRetryOptions) => {
   Object.assign(RetryOptions, options);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).assetsRetry({
+  (window as any)?.assetsRetry?.({
     domain: RetryOptions.domain,
     maxRetryCount: RetryOptions.maxRetryCount || 3,
     ...(typeof RetryOptions?.onRetry === "function"
@@ -34,8 +37,8 @@ const configRetry = (options?: IConfigRetryOptions) => {
     },
   });
 };
+configRetry.retryDynamicImport = retryDynamicImport;
 
-export * from "./config-dynamic-retry";
 export * from "./typings";
 
 export default configRetry;

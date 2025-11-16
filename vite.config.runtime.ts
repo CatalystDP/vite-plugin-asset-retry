@@ -1,5 +1,9 @@
 import path from "path";
+import * as fs from "fs";
 import { defineConfig } from "vite";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import dts from "unplugin-dts/vite";
 
 const baseName = "retry-runtime";
 
@@ -14,11 +18,6 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     outDir: "./dist/runtime",
-    rollupOptions: {
-      output: {
-        exports: "named",
-      },
-    },
     lib: {
       entry: path.resolve(__dirname, "src/runtime/index.ts"),
       //   name: getPackageNameCamelCase(),
@@ -26,7 +25,7 @@ export default defineConfig({
       formats,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      fileName: format => fileNames[format],
+      fileName: fileNames.umd,
     },
   },
 
@@ -36,4 +35,34 @@ export default defineConfig({
       "@@": path.resolve(__dirname),
     },
   },
+  plugins: [
+    dts({
+      tsconfigPath: path.join(__dirname, "./tsconfig.dts-runtime.json"),
+      outDir: "dist/runtime",
+      copyDtsFiles: true,
+      beforeWriteFile: (filePath: string) => {
+        const allowFiles = ["runtime", "typings"];
+        const prefix = "src/runtime";
+        if (allowFiles.some(file => filePath.includes(`${prefix}/${file}`))) {
+          return {
+            filePath: filePath.replace("src/runtime", ""),
+          };
+        }
+        return false;
+      },
+    }),
+    {
+      name: "copy-dts",
+      apply: "build",
+      generateBundle() {
+        this.emitFile({
+          type: "asset",
+          fileName: `runtime.d.ts`,
+          source: fs.readFileSync(
+            path.resolve(__dirname, "src/runtime/runtime.d.ts")
+          ),
+        });
+      },
+    },
+  ],
 });

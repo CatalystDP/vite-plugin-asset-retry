@@ -9,3 +9,7 @@ import("./async1").then(mod => {
 //     console.log("in index glob sync ", key, mod);
 //   });
 // }
+
+const div = document.createElement("div");
+div.innerHTML = "entry loaded";
+document.querySelector("#app")!.appendChild(div);

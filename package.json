@@ -21,14 +21,14 @@
   "scripts": {
     "bootstrap": "pnpm install --frozen-lockfile",
     "dev": "vite --host",
-    "build:demo": "npm run dev:runtime && vite build",
+    "build:demo": "npm run dev:runtime && npm run build:plugin && vite build",
     "build:plugin": "vite build --config vite.config.plugin.ts",
     "dev:runtime": "npm run build:runtime -- --minify false",
     "build:runtime": "vite build --config vite.config.runtime.ts",
     "build": "rimraf build/**/* && tsc && vite build --config vite.config.lib.ts && dts-bundle-generator --config ./dts-bundle-generator.config.ts && copyfiles ./package.json build",
     "build:all": "rimraf ./dist && npm run build:runtime && npm run build:plugin",
     "test": "vitest",
-    "test:coverage": "vitest --coverage",
+    "test:coverage": "vitest --run --coverage",
     "lint:scripts": "eslint . --ext .ts",
     "lint:styles": "stylelint ./**/*.{css,scss}",
     "format:scripts": "prettier . --write",
@@ -38,7 +38,9 @@
     "uninstall-husky": "npm uninstall husky --no-save && git config --unset core.hooksPath && npx rimraf .husky",
     "test:e2e": "npm run build:demo && playwright test",
     "commit": "cz",
-    "release": "release-it"
+    "release": "release-it",
+    "test:all": "npm run test:coverage && npm run test:e2e",
+    "pack:local": "npm run build:all && npm pack"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",

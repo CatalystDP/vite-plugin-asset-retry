@@ -9,5 +9,8 @@ export default defineConfig({
       "@": path.join(__dirname, "./src"),
     },
     globals: true,
+    coverage: {
+      include: ["src/runtime/**", "src/shared/**"],
+    },
   },
 });

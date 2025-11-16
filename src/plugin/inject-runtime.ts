@@ -11,6 +11,13 @@ export const createRuntimeInjectPlugin = (): PluginOption => {
     transformIndexHtml(html) {
       const runtimeCode = [
         fs.readFileSync(
+          path.resolve(
+            moduleRoot,
+            "node_modules/assets-retry/dist/assets-retry.umd.js"
+          ),
+          "utf-8"
+        ),
+        fs.readFileSync(
           path.resolve(moduleRoot, "dist/runtime/retry-runtime.umd.js"),
           "utf-8"
         ),

@@ -1,14 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import configRetry, {
-  IConfigRetryOptions,
-  retryDynamicImport,
-} from "../src/runtime";
+import configRetry, { IConfigRetryOptions } from "../src/runtime";
 
 describe("import() retry test suite", () => {
   beforeEach(async () => {
     configRetry({
       maxRetryCount: 3,
-      domain: ["b.com", "c.com", "d.com"],
+      domain: ["b.com", "c.com", "d.com", "a.com"],
     });
   });
   it("change domain retry", async () => {
@@ -18,10 +15,13 @@ describe("import() retry test suite", () => {
       onRetry: spyRetry,
     });
     try {
-      await retryDynamicImport(Promise.reject(new Error("test error")), {
-        importerUri: "https://a.com/test.js",
-        retryPath: "./test1.js",
-      });
+      await configRetry.retryDynamicImport(
+        Promise.reject(new Error("test error")),
+        {
+          importerUri: "https://a.com/test.js",
+          retryPath: "./test1.js",
+        }
+      );
     } catch (e) {
       err = e as Error;
     }

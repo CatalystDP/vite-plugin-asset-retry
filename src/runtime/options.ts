@@ -1,4 +1,4 @@
-import { IConfigRetryOptions } from "@/runtime/typings";
+import { IConfigRetryOptions } from "./typings";
 
 export const RetryOptions: IConfigRetryOptions = {
   domain: [],

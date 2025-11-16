@@ -3,7 +3,8 @@
     "rootDir": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@@/*": ["./*"]
+      "@@/*": ["./*"],
+      "@catalystdp/vite-plugin-assets-retry": ["."]
     },
     "target": "ESNext",
     "useDefineForClassFields": true,
