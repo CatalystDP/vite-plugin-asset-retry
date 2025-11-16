@@ -25,7 +25,7 @@ export default defineConfig({
       formats,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      fileName: fileNames.umd,
+      fileName: baseName,
     },
   },
 
